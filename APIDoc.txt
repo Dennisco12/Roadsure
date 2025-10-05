@@ -1,1 +1,28 @@
-BASE_URL = 
+BASE_URL = "https://roadsure.onrender.com/roadsure"
+
+"/device/status" (post): "This recieves status signal from device"
+        requests: "device_id": The id or s/n of the device
+                    "status": 1 | 2 | 3 (This signifies the status type
+                        1 -> Accident
+                        2 -> Attack
+                        3 -> Breakdown)
+                example of request data:
+                    {
+                        "device_id": "1234567890",
+                        "status": 1
+                    }
+
+
+
+"/device/location" (post): "This recieves the device location"
+        requests: "device_id": The str id or s/n of the device
+                "location": The dict containing location info.
+
+                example of request data:
+                    {
+                        "device_id": "1234567890",
+                        "location": {
+                            "long": 127.5, 
+                            "lat": -23.8
+                        }
+                    }

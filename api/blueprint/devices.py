@@ -11,7 +11,7 @@ from models import storage
 def send_status():
     if not request.json:
         return jsonify('Not a valid json'), 400
-    
+
     data = request.get_json()
     if "device_id" not in data:
         return jsonify("Please include a valid device_id"), 400
