@@ -26,8 +26,8 @@ def create_users():
     if not request.json:
         return jsonify('Not a valid json'), 400
     user_data = request.get_json()
-    print(user_data)
-    print(type(user_data))
+    # print(user_data)
+    # print(type(user_data))
 
     if "email" not in user_data:
         return jsonify("Please include an email"), 400
@@ -39,7 +39,7 @@ def create_users():
         if key == 'password':
             val = val.encode()
             val = bcrypt.hashpw(val, bcrypt.gensalt())
-            user_data[key] = val
+            user_data[key] = str(val)
         else:
             user_data[key] = val.strip()
 
