@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import ast
 import bcrypt
 from models import storage
 from models.user import User
@@ -93,11 +94,13 @@ def user_login():
     
     db_user = db_user[0]
     try:
-        admin_pass = db_user.password.encode()
+        user_pwd = db_user.password.encode()
     except:
-        admin_pass = db_user.password
+        user_pwd = db_user.password
 
-    if bcrypt.checkpw(password, admin_pass):
+    user_pwd = ast.literal_eval(user_pwd)
+
+    if bcrypt.checkpw(password, user_pwd):
         token = manager.create_session(db_user.id)
         return jsonify({'token': token, 'message': "Login successful"})
     else:
