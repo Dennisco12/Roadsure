@@ -2,10 +2,10 @@ BASE_URL = "https://roadsure.onrender.com/roadsure"
 
 "/device/status" (post): "This recieves status signal from device"
         requests: "device_id": The id or s/n of the device
-                    "status": 1 | 2 | 3 (This signifies the status type
+                    "status": 1 | 2 | 3 (This signifies the status type)
                         1 -> Accident
                         2 -> Attack
-                        3 -> Breakdown)
+                        3 -> Breakdown
                 example of request data:
                     {
                         "device_id": "1234567890",
@@ -26,3 +26,11 @@ BASE_URL = "https://roadsure.onrender.com/roadsure"
                             "lat": -23.8
                         }
                     }
+
+
+"/register_device" (post): "This registers new devices before they are assigned to vehicles"
+        request: "identifier": The string containing the serial number of the device
+                example of request data:
+                        {
+                                "identifier": "123456789"
+        response: "Device successfully registered"
