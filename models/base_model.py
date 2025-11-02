@@ -39,6 +39,8 @@ class BaseModel:
         if 'updated_at' in dictionary and not isinstance(dictionary['updated_at'], str):
             dictionary['updated_at'] = self.updated_at.strftime(time)
         dictionary.pop('_id', None)
+        dictionary.pop('_password', None)
+        dictionary.pop('password', None)
         updated_dict = {}
         for key, value in dictionary.items():
             if key[0] == "_":

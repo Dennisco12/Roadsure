@@ -26,10 +26,12 @@ def create_users():
     if not request.json:
         return jsonify('Not a valid json'), 400
     user_data = request.get_json()
+    print(user_data)
+    print(type(user_data))
 
     if "email" not in user_data:
         return jsonify("Please include an email"), 400
-    db_emails = storage.search("User", email=user_data["email"])
+    db_emails = storage.search("User", email=user_data.get('email'))
     if len(db_emails) > 0:
         return jsonify("Email already exists"), 400
     
@@ -44,22 +46,23 @@ def create_users():
     try:
         user = User(**user_data)
         user.save()
+        token = manager.create_session(user.id)
     except Exception as e:
         return jsonify(f'Unable to create profile: {str(e)}'), 400
     
-    return jsonify(user.to_dict()), 201
+    return jsonify({'token': token, 'message': "User created successfully!"}), 201
 
 @app_views.route('/user/<user_id>', strict_slashes=False, methods=['PUT', 'DELETE', 'GET'])
 def get_update_delete_user(user_id):
     """This updates user data in storage"""
-    if not request.json:
-        return jsonify('Not a valid json'), 400
-    
     user: User = storage.get("User", user_id)
     if not user:
         return jsonify("User not found"), 404
     
     if request.method == "PUT":
+        if not request.json:
+            return jsonify('Not a valid json'), 400
+            
         user_data = request.get_json()
 
         for key, val in user_data.items():
@@ -72,7 +75,7 @@ def get_update_delete_user(user_id):
     elif request.method == 'GET':
         return jsonify(user.to_dict()), 200
 
-@app_views.route('/user/login', strict_slashes=False, methods=['POST'])
+@app_views.route('/user/auth/login', strict_slashes=False, methods=['POST'])
 def user_login():
     if not request.json:
         return jsonify('Invalid request'), 400
@@ -83,7 +86,12 @@ def user_login():
     password = passwd.strip()
     password = password.encode()
 
-    db_user = storage.search('User', email=email.lower())[0]
+    db_user = storage.search('User', email=email.lower())
+
+    if not db_user or len(db_user) == 0:
+        return jsonify("No user found"), 404
+    
+    db_user = db_user[0]
     try:
         admin_pass = db_user.password.encode()
     except:

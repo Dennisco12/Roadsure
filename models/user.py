@@ -48,7 +48,7 @@ class User(BaseModel):
         if not value:
             raise TypeError("Please enter a valid last name")
             
-        self._first_name = value
+        self._last_name = value
     
     @property
     def company_name(self):
